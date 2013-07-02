@@ -35,10 +35,6 @@ class QueryImplementation(object):
 
 class Query(object):
 
-    """
-    An abstraction for efficiently querying images from a repository.
-    """
-
     def __init__(self, query_impl):
         self.specs = []
         self.impl = query_impl
@@ -66,11 +62,6 @@ class Query(object):
 
     @call_impl
     def first(self):
-        """
-        Return all images that match this query.
-
-        :returns a list of images, where each image takes the form of a dict
-        """
         pass
 
     @call_impl
@@ -83,19 +74,8 @@ class Query(object):
 
     @call_impl
     def delete(self):
-        """
-        Remove all images that match this query from the underlying repository
-
-        :returns how many images were deleted
-        """
         pass
 
     @call_impl
     def insert(self, values):
-        """
-        Update all images that match this query with the given values.
-
-        :param image_update: a dictionary of updates
-        :returns how many images were updated
-        """
         pass
