@@ -14,16 +14,16 @@ As an example, let's say you are developing a video game and you have two tables
 
 Using an SQL database, to query a player, you would do something like this:
 
-'''python
+```python
 
 def get_players_of_league(player_id):
 	query(models.Player).filter(id = player_id).first()
 
-'''
+```
 
 Now let's say you want to have a Cassandra backend.  Since Cassandra doesn't have native support for relationships, you want to have a `league` table (or *column family* in Cassandra's parlance) containing JSON-serialized players.  Now you will have to write a separate driver containing code like:
 
-'''python
+```python
 
 def get_players_of_league(player_id):
 	leagues = query(models.League).all()
@@ -34,7 +34,7 @@ def get_players_of_league(player_id):
 				return player
 	return None
 
-'''
+```
 
 The point here is that, because of the difference in the underlying DB models, you end up duplicating your business logic (namely, querying a player by id) in different DB drivers.  This is very bad.
 
@@ -42,16 +42,16 @@ The point here is that, because of the difference in the underlying DB models, y
 
 Continuing with the previous example, we now use the awesome PyQuery:
 
-'''python
+```python
 
 def get_players_of_league(player_id):
 	Query(models.Player).filter(EqualTo('id', player_id)).first()
 
-'''
+```
 
 It's almose identical to the SQL code.  However, this code will continue to work if you decide to use a NoSQL database.  All you need to do is to define a relation in your NoSQL driver, like this:
 
-'''python
+```python
 
 class LeagueHasManyPlayers(OneToMany):
     def query(attribute):
@@ -65,7 +65,7 @@ class LeagueHasManyPlayers(OneToMany):
 
 relations.add_relation(LeagueHasManyPlayers(models.League, models.Player))
 
-'''
+```
 
 Having this relationship defined, it won't matter if the calling code is querying for players but you don't have a player table.  PyQuery will make sure that when players are being queryed, it will use the logic defined in the relationships to find the right data.
 
